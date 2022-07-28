@@ -10,8 +10,11 @@ from forms import LoginForm, RegisterForm, CommentForm, DeleteCommentForm, Goals
 from passes import Authorization, SECRET_KEY
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = (
-    os.environ.get('DATABASE_URL', 'postgresql:///exercise'))
+# app.config['SQLALCHEMY_DATABASE_URI'] = (
+#     os.environ.get('DATABASE_URL', 'postgresql:///exercise'))
+prodURI = os.getenv('DATABASE_URL')
+prodURI = prodURI.replace("postgres://", "postgresql://")
+app.config['SQLALCHEMY_DATABASE_URI'] = prodURI
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = True
 app.config["SECRET_KEY"] = os.environ.get('SECRET_KEY', SECRET_KEY)
