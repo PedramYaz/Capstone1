@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}Muscle Groups{% endblock %}
+
+{% block content %}
+
+<h2 class="m-title">Muscle Categories</h2>
+<h4 class="m-title">Choose a category that best suits the workout you're searching for.</h4>
+<br>
+<div class="container">
+
+    {% for muscle in muscle_groups %}
+    {% for key, value in muscle.items() %}
+    <div class="m-div">
+        <a href="/{{ key }}"><img class="m-groups" id="{{ key }}" src="{{ value }}" alt=""></a>
+        <a href="/{{ key }}">
+            <h3 class="m-h3">{{ key }}</h3>
+        </a>
+    </div>
+    {% endfor %}
+    {% endfor %}
+
+
+    {% endblock %}

@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block title %}Profile{% endblock %}
+
+{% block navbar %}
+<!-- <div class="topnav">
+    <a href="/">Home</a>
+    <a href="/workouts">Workouts</a>
+    <a href="/logout" class="split">Logout</a>
+</div> -->
+{% endblock %}
+{% block content %}
+
+<div>
+    <h3>Welcome, {{ user.first_name }}!</h3>
+    {% if goal.current_weight %}
+    <p>Your current weight is: {{ goal.current_weight }}</p>
+    {% endif %}
+    {% if goal.goal_weight %}
+    <p>Your goal weight is: {{ goal.goal_weight }}</p>
+    {% endif %}
+</div>
+
+{% if goal.current_weight %}
+<button onclick="location.href='/user/{{ user.username }}/goals/update'" type="button">
+    Edit Weight</button>
+{% else %}
+<button onclick="location.href='/user/{{ user.username }}/goals'" type="button">
+    Add Weight</button>
+{% endif %}
+
+<button onclick="location.href='/user/{{ user.username }}/delete'">Delete Account</button>
+<br>
+<br>
+
+
+{% endblock %}

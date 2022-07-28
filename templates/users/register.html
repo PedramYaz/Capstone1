@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block title %}Register{% endblock %}
+<!-- {% block navbar %}
+<div class="topnav">
+    <a href="/">Home</a>
+    <a href="/login">Login</a>
+    <a href="/workouts">Workouts</a>
+</div>
+{% endblock %} -->
+{% block content %}
+
+<div class="row justify-content-md-center">
+    <div class="col-md-7 col-lg-5">
+        <h2 class="join-message">Join SnapCity Today</h2>
+        <form method="POST" id="user_form">
+            {{ form.hidden_tag() }}
+
+            {% for field in form if field.widget.input_type != 'hidden' %}
+            {% for error in field.errors %}
+            <span class="text-danger">{{ error }}</span>
+            {% endfor %}
+            {{ field(placeholder=field.label.text, class="form-control") }}
+            {% endfor %}
+
+            <button class="btn btn-primary btn-lg btn-block">Sign me up!</button>
+            <br>
+            <br>
+            <p style="text-align: center;">Already have an account?</p>
+            <button href="/login" class="btn btn-primary btn-lg btn-block">Login</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %}Home{% endblock %}
+
+
+{% block content %}
+<header class="header-front-page">
+    <div class="header">
+        <h1 class="first-h1">WELCOME TO SNAPCITY</h1>
+        <div class="h3">
+            <div>
+                <h3 class="first-h3-1">YOUR BODY.</h3>
+            </div>
+            <div>
+                <h3 class="first-h3-2">YOUR WORKOUTS.</h3>
+            </div>
+            <div>
+                <h3 class="first-h3-3">YOUR PROGRESS.</h3>
+            </div>
+        </div>
+        <div class='first-btn'>
+            <button class='home-btn' onclick="location.href='/workouts'">Workouts</button>
+            <button class='home-btn' onclick="location.href='/register'">Sign-Up</button>
+            <button class='home-btn' onclick="location.href='/login'">Login</button>
+        </div>
+        <img id="header-photo" src="/static/images/headerpeng.png">
+    </div>
+</header>
+
+{% endblock %}

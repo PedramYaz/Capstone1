@@ -1,0 +1,215 @@
+body {
+  background-color: rgb(168, 168, 168);
+}
+.m-groups {
+  height: 450px;
+  width: 300px;
+}
+
+header {
+  text-align: center;
+  color: white;
+}
+
+#bground-photo {
+  background-repeat: no-repeat;
+  min-width: 33%;
+  height: 550px;
+  background-size: 300px;
+}
+
+.header {
+  position: relative;
+}
+
+#header-photo {
+  width: 100%;
+  z-index: 0;
+}
+
+.h3 {
+  font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+}
+
+.topnav {
+  background-color: #333;
+  overflow: hidden;
+}
+
+/* Style the links inside the navigation bar */
+.topnav a {
+  float: left;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+/* Change the color of links on hover */
+.topnav a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+/* Create a right-aligned (split) link inside the navigation bar */
+.topnav a.split {
+  float: right;
+  background-color: rgb(16, 55, 133);
+  color: white;
+}
+
+.first-h1 {
+  font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+  position: absolute;
+  top: 15%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: calc(2.5em + 1vw);
+}
+
+.first-h3-1 {
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: calc(1em + 1vw);
+}
+.first-h3-2 {
+  position: absolute;
+  top: 36%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: calc(1em + 1vw);
+}
+.first-h3-3 {
+  position: absolute;
+  top: 42%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: calc(1em + 1vw);
+}
+
+.first-btn {
+  position: absolute;
+  top: 65%;
+  left: 45%;
+  transform: translate(-45%, -45%);
+  font-size: calc(1em + 1vw);
+  height: 75px;
+}
+
+.home-btn {
+  color: rgb(255, 255, 255);
+  background-color: rgb(16, 55, 133);
+  border-style: groove;
+  border-radius: 10px;
+  text-transform: uppercase;
+  padding: 10px;
+  width: 40%;
+}
+.first-btn {
+  position: absolute;
+  left: 50%;
+  /* right: 50%; */
+}
+
+.home-btn:hover {
+  color: black;
+  border-style: none;
+}
+
+.info {
+  display: none;
+}
+
+.item:hover {
+  cursor: pointer;
+  color: rgb(255, 255, 255);
+}
+
+.join-message {
+  text-align: center;
+}
+
+.container {
+  padding: 20px;
+}
+
+.m-div {
+  float: left;
+  padding-left: 50px;
+  padding-bottom: 50px;
+  width: 33%;
+}
+
+.m-title {
+  text-align: center;
+}
+
+.m-h3 {
+  text-align: center;
+  color: rgb(16, 55, 133);
+}
+
+/* item is the name of the workouts */
+/* #item { */
+/* position: relative; */
+/* left: 100px; */
+/* } */
+/* info is all the stuff that pops up (info, equipment, comments, etc.) */
+#info {
+  padding-right: 5%;
+  padding-top: 2%;
+  padding-bottom: 7%;
+  /* position: relative; */
+  /* left: 100px; */
+  /* inline-size: 85%; */
+}
+
+.workout-list {
+  inline-size: 67%;
+}
+
+/* the overall of page, all of it is in a <div> */
+.iblock {
+  display: flex;
+  font-size: 115%;
+}
+
+ul {
+  list-style: none;
+}
+
+ul li {
+  position: relative;
+}
+
+ul li:before {
+  content: "";
+  position: absolute;
+  width: 30px;
+  height: 25px;
+  left: -30px;
+  background: url("/static/images/pngwing.com.png") no-repeat 50% 50% / contain;
+}
+
+#submit-button {
+  width: 70%;
+}
+
+h5 {
+  font-size: 85%;
+}
+
+section {
+  font-size: 70%;
+}
+
+.section {
+  width: 70%;
+}
+
+.comment {
+  width: 70%;
+}
