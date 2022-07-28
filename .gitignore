@@ -1,5 +1,4 @@
-/venv 
-Venv/
+venv/
 __pycache__/
-/__pycache__
 passes.py
+passes.py/
