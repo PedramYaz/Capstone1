@@ -3,6 +3,7 @@ import os
 import requests
 from flask import Flask, redirect, render_template, flash, jsonify, session, request, g
 from flask_debugtoolbar import DebugToolbarExtension
+from flask_sqlalchemy import SQLAlchemy
 from werkzeug.exceptions import Unauthorized
 from models import db, connect_db, User, Goals, Comments
 from forms import LoginForm, RegisterForm, CommentForm, DeleteCommentForm, GoalsForm, EditGoalsForm
@@ -20,6 +21,8 @@ API_BASE_URL = "https://wger.de/api/v2"
 
 connect_db(app)
 db.create_all()
+
+db = SQLAlchemy(app)
 
 debug = DebugToolbarExtension(app)
 
