@@ -30,29 +30,18 @@ db = SQLAlchemy(app)
 debug = DebugToolbarExtension(app)
 
 
-muscle_groups = [{"chest": "https://thumbs.dreamstime.com/b/d-rendered-muscle-illustration-pectoralis-major-pectoralis-major-157612533.jpg",
-                "biceps": "https://thumbs.dreamstime.com/b/d-rendered-muscle-illustration-biceps-biceps-157612447.jpg",
-                "abs": "https://thumbs.dreamstime.com/b/d-rendered-muscle-illustration-external-oblique-external-oblique-157612399.jpg",
-                "shoulders": "https://thumbs.dreamstime.com/b/deltoid-d-rendered-muscle-illustration-157612398.jpg",
-                "quads": "https://thumbs.dreamstime.com/b/d-rendered-muscle-illustration-vastus-lateralis-vastus-lateralis-157612633.jpg",
-                "traps": "https://thumbs.dreamstime.com/b/d-rendered-muscle-illustration-trapezius-trapezius-157612310.jpg",
-                "back": "https://thumbs.dreamstime.com/b/d-rendered-muscle-illustration-latissimus-dorsi-latissimus-dorsi-157612158.jpg",
-                "triceps": "https://thumbs.dreamstime.com/b/triceps-d-rendered-muscle-illustration-157612423.jpg",
-                "calves": "https://thumbs.dreamstime.com/b/gastrocnemius-d-rendered-muscle-illustration-157612044.jpg",
-                "hamstrings": "https://thumbs.dreamstime.com/b/biceps-femoris-longus-d-rendered-muscle-illustration-157611954.jpg",
-                "glutes": "https://thumbs.dreamstime.com/b/d-rendered-muscle-illustration-gluteus-maximus-gluteus-maximus-157612061.jpg"}]
-
-muscle_numbers = {"biceps": "1",
-                    "shoulders": "2",
-                    "chest": "4",
-                    "triceps": "5",
-                    "calves": "7",
-                    "glutes": "8",
-                    "traps": "9",
-                    "quads": "10",
-                    "hamstrings": "11",
-                    "back": "12",
-                    "abs": "14"}
+muscle_groups = {"chest": {'image': "https://thumbs.dreamstime.com/b/d-rendered-muscle-illustration-pectoralis-major-pectoralis-major-157612533.jpg", 'id': '4', "image1": "/static/images/muscles/main/muscle-4.svg", "image2": "/static/images/muscles/muscular_system_front.svg"},
+                "biceps":
+                {"image": "https://thumbs.dreamstime.com/b/d-rendered-muscle-illustration-biceps-biceps-157612447.jpg", "id": "1", "image1": "/static/images/muscles/main/muscle-1.svg", "image2": "/static/images/muscles/muscular_system_front.svg"},
+                "abs": {"image": "https://thumbs.dreamstime.com/b/d-rendered-muscle-illustration-external-oblique-external-oblique-157612399.jpg", "id": "14", "image1": "/static/images/muscles/main/muscle-14.svg", "image2": "/static/images/muscles/muscular_system_front.svg"},
+                "shoulders": {"image": "https://thumbs.dreamstime.com/b/deltoid-d-rendered-muscle-illustration-157612398.jpg", "id": "2", "image1": "/static/images/muscles/main/muscle-2.svg", "image2": "/static/images/muscles/muscular_system_front.svg"},
+                "quads": {"image": "https://thumbs.dreamstime.com/b/d-rendered-muscle-illustration-vastus-lateralis-vastus-lateralis-157612633.jpg", "id": "10", "image1": "/static/images/muscles/main/muscle-10.svg", "image2": "/static/images/muscles/muscular_system_front.svg"},
+                "traps": {"image": "https://thumbs.dreamstime.com/b/d-rendered-muscle-illustration-trapezius-trapezius-157612310.jpg", "id": "9", "image1": "/static/images/muscles/main/muscle-9.svg", "image2": "/static/images/muscles/muscular_system_back.svg"},
+                "back": {"image": "https://thumbs.dreamstime.com/b/d-rendered-muscle-illustration-latissimus-dorsi-latissimus-dorsi-157612158.jpg", "id": "12", "image1": "/static/images/muscles/main/muscle-12.svg", "image2": "/static/images/muscles/muscular_system_back.svg"},
+                "triceps": {"image": "https://thumbs.dreamstime.com/b/triceps-d-rendered-muscle-illustration-157612423.jpg", "id": "5", "image1": "/static/images/muscles/main/muscle-5.svg", "image2": "/static/images/muscles/muscular_system_back.svg"},
+                "calves": {"image": "https://thumbs.dreamstime.com/b/gastrocnemius-d-rendered-muscle-illustration-157612044.jpg", "id": "7", "image1": "/static/images/muscles/main/muscle-7.svg", "image2": "/static/images/muscles/muscular_system_back.svg"},
+                "hamstrings": {"image": "https://thumbs.dreamstime.com/b/biceps-femoris-longus-d-rendered-muscle-illustration-157611954.jpg", "id": "11", "image1": "/static/images/muscles/main/muscle-11.svg", "image2": "/static/images/muscles/muscular_system_back.svg"},
+                "glutes": {"image": "https://thumbs.dreamstime.com/b/d-rendered-muscle-illustration-gluteus-maximus-gluteus-maximus-157612061.jpg", "id": "8", "image1": "/static/images/muscles/main/muscle-8.svg", "image2": "/static/images/muscles/muscular_system_back.svg"}}
 
 
 @app.route('/')
@@ -237,188 +226,194 @@ def add_comment():
     return redirect(request.url)
 
 
+@app.route('/muscle/<muscle_name>')
+def specific_workouts(muscle_name):
+    """Show the workouts that are offered for the muscle selected"""
 
-# @app.route('/<muscle>')
-# def specific_workouts(muscle):
-#     """Show the workouts that are offered for the muscle selected"""
-#     muscle = muscle_numbers['chest']
-#     workout = make_api_request(muscle)
+    muscle_id = muscle_groups[muscle_name].get('id')
+    workout = make_api_request(muscle_id)
+    workouts = workout['results']
+    comment = Comments.query.all()
+    form = CommentForm()
+    return render_template("muscles/workout.html", workouts = workouts, form = form, comment = comment, muscle_groups = muscle_groups)
+
+
+# @app.route('/muscle/<muscle_name>', methods = ["POST"])
+# def add_chest_comment():
+#     """Show the comment form"""
+
+#     add_comment()
+#     return redirect(request.url)
+
+
+
+# @app.route('/chest')
+# def chest_workouts():
+#     """show the chest workouts that are offered"""
+#     workout = make_api_request('4')
+#     workouts = workout['results']
+#     comment = Comments.query.all()
+#     form = CommentForm()
+#     return render_template("muscles/workout.html", workouts = workouts, form = form, comment = comment)
+
+# # @app.route('/chest', methods = ["POST"])
+# # def add_chest_comment():
+# #     """Show the comment form"""
+
+# #     add_comment()
+# #     return redirect(request.url)
+
+
+# @app.route('/biceps')
+# def bicep_workouts():
+#     """show the biceps workouts that are offered"""
+#     workout = make_api_request('1')
 #     workouts = workout['results']
 #     comment = Comments.query.all()
 #     form = CommentForm()
 #     return render_template("muscles/workout.html", workouts = workouts, form = form, comment = comment)
 
 
+# @app.route('/biceps', methods = ["POST"])
+# def add_bicep_comment():
+#     """Show the comment form"""
+#     add_comment()
+#     return redirect(request.url)
 
 
+# @app.route('/abs')
+# def ab_workouts():
+#     """show the ab workouts that are offered"""
+#     workout = make_api_request('14')
+#     workouts = workout['results']
+#     comment = Comments.query.all()
+#     form = CommentForm()
+#     return render_template("muscles/workout.html", workouts = workouts, form = form, comment = comment)
 
-@app.route('/chest')
-def chest_workouts():
-    """show the chest workouts that are offered"""
-    workout = make_api_request('4')
-    workouts = workout['results']
-    comment = Comments.query.all()
-    form = CommentForm()
-    return render_template("muscles/workout.html", workouts = workouts, form = form, comment = comment)
+# @app.route('/abs', methods = ["POST"])
+# def add_abs_comment():
+#     """Show the comment form"""
+#     add_comment()
+#     return redirect(request.url)
 
-@app.route('/chest', methods = ["POST"])
-def add_chest_comment():
-    """Show the comment form"""
-
-    add_comment()
-    return redirect(request.url)
-
-
-@app.route('/biceps')
-def bicep_workouts():
-    """show the biceps workouts that are offered"""
-    workout = make_api_request('1')
-    workouts = workout['results']
-    comment = Comments.query.all()
-    form = CommentForm()
-    return render_template("muscles/workout.html", workouts = workouts, form = form, comment = comment)
+# @app.route('/shoulders')
+# def shoulder_workouts():
+#     """show the shoulder workouts that are offered"""
+#     workout = make_api_request('2')
+#     workouts = workout['results']
+#     comment = Comments.query.all()
+#     form = CommentForm()
+#     return render_template("muscles/workout.html", workouts = workouts, form = form, comment = comment)
 
 
-@app.route('/biceps', methods = ["POST"])
-def add_bicep_comment():
-    """Show the comment form"""
-    add_comment()
-    return redirect(request.url)
+# @app.route('/shoulders', methods = ["POST"])
+# def add_shoulders_comment():
+#     """Show the comment form"""
+#     add_comment()
+#     return redirect(request.url)
 
+# @app.route('/traps')
+# def trap_workouts():
+#     """show the trap workouts that are offered"""
+#     workout = make_api_request('9')
+#     workouts = workout['results']
+#     comment = Comments.query.all()
+#     form = CommentForm()
+#     return render_template("muscles/workout.html", workouts = workouts, form = form, comment = comment)
 
-@app.route('/abs')
-def ab_workouts():
-    """show the ab workouts that are offered"""
-    workout = make_api_request('14')
-    workouts = workout['results']
-    comment = Comments.query.all()
-    form = CommentForm()
-    return render_template("muscles/workout.html", workouts = workouts, form = form, comment = comment)
+# @app.route('/traps', methods = ["POST"])
+# def add_traps_comment():
+#     """Show the comment form"""
+#     add_comment()
+#     return redirect(request.url)
 
-@app.route('/abs', methods = ["POST"])
-def add_abs_comment():
-    """Show the comment form"""
-    add_comment()
-    return redirect(request.url)
+# @app.route('/quads')
+# def quad_workouts():
+#     """show the quad workouts that are offered"""
+#     workout = make_api_request('10')
+#     workouts = workout['results']
+#     comment = Comments.query.all()
+#     form = CommentForm()
+#     return render_template("muscles/workout.html", workouts = workouts, form = form, comment = comment)
 
-@app.route('/shoulders')
-def shoulder_workouts():
-    """show the shoulder workouts that are offered"""
-    workout = make_api_request('2')
-    workouts = workout['results']
-    comment = Comments.query.all()
-    form = CommentForm()
-    return render_template("muscles/workout.html", workouts = workouts, form = form, comment = comment)
+# @app.route('/quads', methods = ["POST"])
+# def add_quads_comment():
+#     """Show the comment form"""
+#     add_comment()
+#     return redirect(request.url)
 
+# @app.route('/back')
+# def back_workouts():
+#     """show the back workouts that are offered"""
+#     workout = make_api_request('12')
+#     workouts = workout['results']
+#     comment = Comments.query.all()
+#     form = CommentForm()
+#     return render_template("muscles/workout.html", workouts = workouts, form = form, comment = comment)
 
-@app.route('/shoulders', methods = ["POST"])
-def add_shoulders_comment():
-    """Show the comment form"""
-    add_comment()
-    return redirect(request.url)
+# @app.route('/back', methods = ["POST"])
+# def add_back_comment():
+#     """Show the comment form"""
+#     add_comment()
+#     return redirect(request.url)
 
-@app.route('/traps')
-def trap_workouts():
-    """show the trap workouts that are offered"""
-    workout = make_api_request('9')
-    workouts = workout['results']
-    comment = Comments.query.all()
-    form = CommentForm()
-    return render_template("muscles/workout.html", workouts = workouts, form = form, comment = comment)
+# @app.route('/triceps')
+# def tricep_workouts():
+#     """show the triceps workouts that are offered"""
+#     workout = make_api_request('5')
+#     workouts = workout['results']
+#     comment = Comments.query.all()
+#     form = CommentForm()
+#     return render_template("muscles/workout.html", workouts = workouts, form = form, comment = comment)
 
-@app.route('/traps', methods = ["POST"])
-def add_traps_comment():
-    """Show the comment form"""
-    add_comment()
-    return redirect(request.url)
+# @app.route('/triceps', methods = ["POST"])
+# def add_triceps_comment():
+#     """Show the comment form"""
+#     add_comment()
+#     return redirect(request.url)
 
-@app.route('/quads')
-def quad_workouts():
-    """show the quad workouts that are offered"""
-    workout = make_api_request('10')
-    workouts = workout['results']
-    comment = Comments.query.all()
-    form = CommentForm()
-    return render_template("muscles/workout.html", workouts = workouts, form = form, comment = comment)
+# @app.route('/calves')
+# def calf_workouts():
+#     """show the calf workouts that are offered"""
+#     workout = make_api_request('7')
+#     workouts = workout['results']
+#     comment = Comments.query.all()
+#     form = CommentForm()
+#     return render_template("muscles/workout.html", workouts = workouts, form = form, comment = comment)
 
-@app.route('/quads', methods = ["POST"])
-def add_quads_comment():
-    """Show the comment form"""
-    add_comment()
-    return redirect(request.url)
+# @app.route('/calves', methods = ["POST"])
+# def add_calf_comment():
+#     """Show the comment form"""
+#     add_comment()
+#     return redirect(request.url)
 
-@app.route('/back')
-def back_workouts():
-    """show the back workouts that are offered"""
-    workout = make_api_request('12')
-    workouts = workout['results']
-    comment = Comments.query.all()
-    form = CommentForm()
-    return render_template("muscles/workout.html", workouts = workouts, form = form, comment = comment)
+# @app.route('/hamstrings')
+# def hamstring_workouts():
+#     """show the hamstring workouts that are offered"""
+#     workout = make_api_request('11')
+#     workouts = workout['results']
+#     comment = Comments.query.all()
+#     form = CommentForm()
+#     return render_template("muscles/workout.html", workouts = workouts, form = form, comment = comment)
 
-@app.route('/back', methods = ["POST"])
-def add_back_comment():
-    """Show the comment form"""
-    add_comment()
-    return redirect(request.url)
+# @app.route('/hamstrings', methods = ["POST"])
+# def add_hamstring_comment():
+#     """Show the comment form"""
+#     add_comment()
+#     return redirect(request.url)
 
-@app.route('/triceps')
-def tricep_workouts():
-    """show the triceps workouts that are offered"""
-    workout = make_api_request('5')
-    workouts = workout['results']
-    comment = Comments.query.all()
-    form = CommentForm()
-    return render_template("muscles/workout.html", workouts = workouts, form = form, comment = comment)
+# @app.route('/glutes')
+# def glute_workouts():
+#     """show the glute workouts that are offered"""
+#     workout = make_api_request('8')
+#     workouts = workout['results']
+#     comment = Comments.query.all()
+#     form = CommentForm()
+#     return render_template("muscles/workout.html", workouts = workouts, form = form, comment = comment)
 
-@app.route('/triceps', methods = ["POST"])
-def add_triceps_comment():
-    """Show the comment form"""
-    add_comment()
-    return redirect(request.url)
-
-@app.route('/calves')
-def calf_workouts():
-    """show the calf workouts that are offered"""
-    workout = make_api_request('7')
-    workouts = workout['results']
-    comment = Comments.query.all()
-    form = CommentForm()
-    return render_template("muscles/workout.html", workouts = workouts, form = form, comment = comment)
-
-@app.route('/calves', methods = ["POST"])
-def add_calf_comment():
-    """Show the comment form"""
-    add_comment()
-    return redirect(request.url)
-
-@app.route('/hamstrings')
-def hamstring_workouts():
-    """show the hamstring workouts that are offered"""
-    workout = make_api_request('11')
-    workouts = workout['results']
-    comment = Comments.query.all()
-    form = CommentForm()
-    return render_template("muscles/workout.html", workouts = workouts, form = form, comment = comment)
-
-@app.route('/hamstrings', methods = ["POST"])
-def add_hamstring_comment():
-    """Show the comment form"""
-    add_comment()
-    return redirect(request.url)
-
-@app.route('/glutes')
-def glute_workouts():
-    """show the glute workouts that are offered"""
-    workout = make_api_request('8')
-    workouts = workout['results']
-    comment = Comments.query.all()
-    form = CommentForm()
-    return render_template("muscles/workout.html", workouts = workouts, form = form, comment = comment)
-
-@app.route('/glutes', methods = ["POST"])
-def add_glute_comment():
-    """Show the comment form"""
-    add_comment()
-    return redirect(request.url)
+# @app.route('/glutes', methods = ["POST"])
+# def add_glute_comment():
+#     """Show the comment form"""
+#     add_comment()
+#     return redirect(request.url)
 

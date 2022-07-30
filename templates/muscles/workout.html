@@ -3,115 +3,76 @@
 
 {% block content %}
 
-
 <div class="iblock">
-    {% if "chest" in url_for(request.endpoint) %}
-    <div id="bground-photo"
-        style="background-image: url(/static/images/muscles/main/muscle-4.svg), url(/static/images/muscles/muscular_system_front.svg);">
-    </div>
-    {% elif "biceps" in url_for(request.endpoint) %}
-    <div id="bground-photo"
-        style="background-image: url(/static/images/muscles/main/muscle-1.svg), url(/static/images/muscles/muscular_system_front.svg);">
-    </div>
-    {% elif "abs" in url_for(request.endpoint) %}
-    <div id="bground-photo"
-        style="background-image: url(/static/images/muscles/main/muscle-6.svg), url(/static/images/muscles/muscular_system_front.svg);">
-    </div>
-    {% elif "back" in url_for(request.endpoint) %}
-    <div id="bground-photo"
-        style="background-image: url(/static/images/muscles/main/muscle-12.svg), url(/static/images/muscles/muscular_system_back.svg);">
-    </div>
-    {% elif "calves" in url_for(request.endpoint) %}
-    <div id="bground-photo"
-        style="background-image: url(/static/images/muscles/main/muscle-7.svg), url(/static/images/muscles/muscular_system_back.svg);">
-    </div>
-    {% elif "glutes" in url_for(request.endpoint) %}
-    <div id="bground-photo"
-        style="background-image: url(/static/images/muscles/main/muscle-8.svg), url(/static/images/muscles/muscular_system_back.svg);">
-    </div>
-    {% elif "hamstrings" in url_for(request.endpoint) %}
-    <div id="bground-photo"
-        style="background-image: url(/static/images/muscles/main/muscle-11.svg), url(/static/images/muscles/muscular_system_back.svg);">
-    </div>
-    {% elif "quads" in url_for(request.endpoint) %}
-    <div id="bground-photo"
-        style="background-image: url(/static/images/muscles/main/muscle-10.svg), url(/static/images/muscles/muscular_system_front.svg);">
-    </div>
-    {% elif "shoulders" in url_for(request.endpoint) %}
-    <div id="bground-photo"
-        style="background-image: url(/static/images/muscles/main/muscle-2.svg), url(/static/images/muscles/muscular_system_front.svg);">
-    </div>
-    {% elif "traps" in url_for(request.endpoint) %}
-    <div id="bground-photo"
-        style="background-image: url(/static/images/muscles/main/muscle-9.svg), url(/static/images/muscles/muscular_system_back.svg);">
-    </div>
-    {% elif "triceps" in url_for(request.endpoint) %}
-    <div id="bground-photo"
-        style="background-image: url(/static/images/muscles/main/muscle-5.svg), url(/static/images/muscles/muscular_system_back.svg);">
+    {% for muscle, all_items in muscle_groups.items() %}
+    {% if muscle_groups.muscle in url_for(request.endpoint) %}
+    <div id="bground-photo" style="background-image: url({{ all_items.image1 }}), url({{ all_items.image2 }});">
     </div>
     {% endif %}
-    <ul class="workout-list">
-        {% for workout in workouts %}
-        <li class="item" id="{{ workout.uuid }}"> {{ workout.name|replace(" Flye", "Fly" ) }}</li>
-        <div class="info" id="info">
-            {% autoescape false %}
-            <p>{{ workout.description|replace("</p>", "")|replace("<p>",
-                "")|replace("
-            <ul>", "")|replace("</ul>", "")|replace("
-            </li>", "")|replace("<li>", "<br />-")}}</p>
-                {% if workout.equipment != [] %}
+    {% endfor %}
+</div>
+<ul class="workout-list">
+    {% for workout in workouts %}
+    <li class="item" id="{{ workout.uuid }}"> {{ workout.name|replace(" Flye", "Fly" ) }}</li>
+    <div class="info" id="info">
+        {% autoescape false %}
+        <p>{{ workout.description|replace("</p>", "")|replace("<p>",
+            "")|replace("
+        <ul>", "")|replace("</ul>", "")|replace("
+        </li>", "")|replace("<li>", "<br />-")}}</p>
+            {% if workout.equipment != [] %}
+            <div>
+                Necessary Workout Equipment: {{ workout.equipment |replace("1", "Barbell")|replace("2",
+                "SZ-Bar")|replace("3",
+                "Dumbbell")|replace("4", "Gym Mat")|replace("5", "Swiss Ball")|replace("6", "Pull-Up
+                Bar")|replace("7",
+                "None
+                (bodyweight exercise)")|replace("8", "Bench")|replace("9", "Incline Bench")|replace("10",
+                "Kettlebell")}}
+            </div>
+            {% else %}
+            <div>
+                Necessary Workout Equpiment: [Specific Machinery]
+            </div>
+            {% endif %}
+            <div>
+                <br>
+                <h5>User comments:</h5>
+                <br>
                 <div>
-                    Necessary Workout Equipment: {{ workout.equipment |replace("1", "Barbell")|replace("2",
-                    "SZ-Bar")|replace("3",
-                    "Dumbbell")|replace("4", "Gym Mat")|replace("5", "Swiss Ball")|replace("6", "Pull-Up
-                    Bar")|replace("7",
-                    "None
-                    (bodyweight exercise)")|replace("8", "Bench")|replace("9", "Incline Bench")|replace("10",
-                    "Kettlebell")}}
-                </div>
-                {% else %}
-                <div>
-                    Necessary Workout Equpiment: [Specific Machinery]
-                </div>
-                {% endif %}
-                <div>
-                    <br>
-                    <h5>User comments:</h5>
-                    <br>
-                    <div>
-                        {% for comments in comment %}
-                        {% if workout.uuid == comments.workout_id %}
-                        <section>
-                            {% if comments.name %}
-                            <u>Name:</u> {{ comments.name }}
-                            {% else %}
-                            <u>Name:</u> anonymous
-                            {% endif %}
-                        </section>
-                        <section>
-                            <u>Date:</u> {{ comments.date_posted.strftime('%m/%d/%Y %H:%M') }}
-                        </section>
-                        <section>
-                            <u>Title:</u> {{ comments.title }}
-                        </section>
-                        <section>
-                            <u>Content:</u> {{ comments.content }}
-                        </section>
-                        <br>
+                    {% for comments in comment %}
+                    {% if workout.uuid == comments.workout_id %}
+                    <section>
+                        {% if comments.name %}
+                        <u>Name:</u> {{ comments.name }}
+                        {% else %}
+                        <u>Name:</u> anonymous
                         {% endif %}
-                        {% endfor %}
-                    </div>
+                    </section>
+                    <section>
+                        <u>Date:</u> {{ comments.date_posted.strftime('%m/%d/%Y %H:%M') }}
+                    </section>
+                    <section>
+                        <u>Title:</u> {{ comments.title }}
+                    </section>
+                    <section>
+                        <u>Content:</u> {{ comments.content }}
+                    </section>
                     <br>
-                    <form method="POST" id="comment" class="comment">
+                    {% endif %}
+                    {% endfor %}
+                </div>
+                <br>
+                <form method="POST" id="comment" class="comment">
 
-                        <div class="backup-form" id="edit">{{ form.title(placeholder = "Title", class = "section") }}
-                        </div>
-                        <div class="backup-form" id="edit">{{ form.content(placeholder = "Content", class = "section")
-                            }}</div>
-                        <div class="backup-form" id="edit">{{ form.name(placeholder = "Name (optional)", class =
-                            "section") }}</div>
-                        <div>{{ form.workout_id (value = workout.uuid) }}</div>
-                        <!-- {{ form.hidden_tag() }}
+                    <div class="backup-form" id="edit">{{ form.title(placeholder = "Title", class = "section") }}
+                    </div>
+                    <div class="backup-form" id="edit">{{ form.content(placeholder = "Content", class = "section")
+                        }}</div>
+                    <div class="backup-form" id="edit">{{ form.name(placeholder = "Name (optional)", class =
+                        "section") }}</div>
+                    <div>{{ form.workout_id (value = workout.uuid) }}</div>
+                    <!-- {{ form.hidden_tag() }}
 
                         {% for field in form if field.widget.input_type != 'hidden' %}
                         {% for error in field.errors %}
@@ -120,15 +81,15 @@
                         {{ field(placeholder=field.label.text, class="form-control") }}
                         {% endfor %} -->
 
-                        <button id="submit-button"
-                            class="{{ workout.uuid }} btn btn-primary btn-block btn-lg">Submit</button>
-                        {% endautoescape %}
+                    <button id="submit-button"
+                        class="{{ workout.uuid }} btn btn-primary btn-block btn-lg">Submit</button>
+                    {% endautoescape %}
 
-                    </form>
-                </div>
-        </div>
-        {% endfor %}
-    </ul>
+                </form>
+            </div>
+    </div>
+    {% endfor %}
+</ul>
 </div>
 
 

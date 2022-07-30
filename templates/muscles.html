@@ -8,16 +8,14 @@
 <br>
 <div class="container">
 
-    {% for muscle in muscle_groups %}
-    {% for key, value in muscle.items() %}
+    {% for muscle, all_items in muscle_groups.items() %}
     <div class="m-div">
-        <a href="/{{ key }}"><img class="m-groups" id="{{ key }}" src="{{ value }}" alt=""></a>
-        <a href="/{{ key }}">
-            <h3 class="m-h3">{{ key }}</h3>
+        <a href="/muscle/{{ muscle }}"><img class="m-groups" src="{{ all_items.image }}" alt="" id="{{ muscle }}"></a>
+        <a href="{{ muscle }}">
+            <h3 class="m-h3">{{ muscle }}</h3>
         </a>
     </div>
     {% endfor %}
-    {% endfor %}
+</div>
 
-
-    {% endblock %}
+{% endblock %}
