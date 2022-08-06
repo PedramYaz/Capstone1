@@ -269,26 +269,26 @@ def make_api_request(muscle_id):
     response = requests.get(url = url, data = data, headers = headers)
     return response.json()
 
-def add_comment():
-    form = CommentForm()
+# def add_comment():
+#     form = CommentForm()
 
-    form.validate_on_submit()
-    name = form.name.data
-    title = form.title.data
-    content = form.content.data
-    date_posted = form.date_posted.data
-    workout_id = form.workout_id.data
+#     form.validate_on_submit()
+#     name = form.name.data
+#     title = form.title.data
+#     content = form.content.data
+#     date_posted = form.date_posted.data
+#     workout_id = form.workout_id.data
 
-    comment = Comments(name = name, title = title, content = content, date_posted = date_posted, workout_id = workout_id)
+#     comment = Comments(name = name, title = title, content = content, date_posted = date_posted, workout_id = workout_id)
 
-    db.session.add(comment)
-    db.session.commit()
+#     db.session.add(comment)
+#     db.session.commit()
 
     
-    return redirect(request.url)
+#     return redirect(request.url)
 
 
-@app.route('/muscle/<muscle_name>')
+@app.route('/muscle/<muscle_name>', methods = ["GET", "POST"])
 def specific_workouts(muscle_name):
     """Show the workouts that are offered for the muscle selected"""
 
@@ -297,186 +297,31 @@ def specific_workouts(muscle_name):
     workout = make_api_request(muscle_id)
     workouts = workout['results']
     comment = Comments.query.all()
+    
     form = CommentForm()
+
+    if form.validate_on_submit():
+        name = form.name.data
+        title = form.title.data
+        content = form.content.data
+        date_posted = form.date_posted.data
+        workout_id = form.workout_id.data
+
+        comment = Comments(name = name, title = title, content = content, date_posted = date_posted, workout_id = workout_id)
+
+        db.session.add(comment)
+        db.session.commit()
+
+        return redirect(request.url)
+
     return render_template("muscles/workout.html", workouts = workouts, form = form, comment = comment, muscle_group = muscle_group)
 
 
 # @app.route('/muscle/<muscle_name>', methods = ["POST"])
-# def add_chest_comment():
+# def add_chest_comment(muscle_name):
 #     """Show the comment form"""
 
-#     add_comment()
-#     return redirect(request.url)
-
-
-
-# @app.route('/chest')
-# def chest_workouts():
-#     """show the chest workouts that are offered"""
-#     workout = make_api_request('4')
-#     workouts = workout['results']
-#     comment = Comments.query.all()
-#     form = CommentForm()
-#     return render_template("muscles/workout.html", workouts = workouts, form = form, comment = comment)
-
-# # @app.route('/chest', methods = ["POST"])
-# # def add_chest_comment():
-# #     """Show the comment form"""
-
-# #     add_comment()
-# #     return redirect(request.url)
-
-
-# @app.route('/biceps')
-# def bicep_workouts():
-#     """show the biceps workouts that are offered"""
-#     workout = make_api_request('1')
-#     workouts = workout['results']
-#     comment = Comments.query.all()
-#     form = CommentForm()
-#     return render_template("muscles/workout.html", workouts = workouts, form = form, comment = comment)
-
-
-# @app.route('/biceps', methods = ["POST"])
-# def add_bicep_comment():
-#     """Show the comment form"""
-#     add_comment()
-#     return redirect(request.url)
-
-
-# @app.route('/abs')
-# def ab_workouts():
-#     """show the ab workouts that are offered"""
-#     workout = make_api_request('14')
-#     workouts = workout['results']
-#     comment = Comments.query.all()
-#     form = CommentForm()
-#     return render_template("muscles/workout.html", workouts = workouts, form = form, comment = comment)
-
-# @app.route('/abs', methods = ["POST"])
-# def add_abs_comment():
-#     """Show the comment form"""
-#     add_comment()
-#     return redirect(request.url)
-
-# @app.route('/shoulders')
-# def shoulder_workouts():
-#     """show the shoulder workouts that are offered"""
-#     workout = make_api_request('2')
-#     workouts = workout['results']
-#     comment = Comments.query.all()
-#     form = CommentForm()
-#     return render_template("muscles/workout.html", workouts = workouts, form = form, comment = comment)
-
-
-# @app.route('/shoulders', methods = ["POST"])
-# def add_shoulders_comment():
-#     """Show the comment form"""
-#     add_comment()
-#     return redirect(request.url)
-
-# @app.route('/traps')
-# def trap_workouts():
-#     """show the trap workouts that are offered"""
-#     workout = make_api_request('9')
-#     workouts = workout['results']
-#     comment = Comments.query.all()
-#     form = CommentForm()
-#     return render_template("muscles/workout.html", workouts = workouts, form = form, comment = comment)
-
-# @app.route('/traps', methods = ["POST"])
-# def add_traps_comment():
-#     """Show the comment form"""
-#     add_comment()
-#     return redirect(request.url)
-
-# @app.route('/quads')
-# def quad_workouts():
-#     """show the quad workouts that are offered"""
-#     workout = make_api_request('10')
-#     workouts = workout['results']
-#     comment = Comments.query.all()
-#     form = CommentForm()
-#     return render_template("muscles/workout.html", workouts = workouts, form = form, comment = comment)
-
-# @app.route('/quads', methods = ["POST"])
-# def add_quads_comment():
-#     """Show the comment form"""
-#     add_comment()
-#     return redirect(request.url)
-
-# @app.route('/back')
-# def back_workouts():
-#     """show the back workouts that are offered"""
-#     workout = make_api_request('12')
-#     workouts = workout['results']
-#     comment = Comments.query.all()
-#     form = CommentForm()
-#     return render_template("muscles/workout.html", workouts = workouts, form = form, comment = comment)
-
-# @app.route('/back', methods = ["POST"])
-# def add_back_comment():
-#     """Show the comment form"""
-#     add_comment()
-#     return redirect(request.url)
-
-# @app.route('/triceps')
-# def tricep_workouts():
-#     """show the triceps workouts that are offered"""
-#     workout = make_api_request('5')
-#     workouts = workout['results']
-#     comment = Comments.query.all()
-#     form = CommentForm()
-#     return render_template("muscles/workout.html", workouts = workouts, form = form, comment = comment)
-
-# @app.route('/triceps', methods = ["POST"])
-# def add_triceps_comment():
-#     """Show the comment form"""
-#     add_comment()
-#     return redirect(request.url)
-
-# @app.route('/calves')
-# def calf_workouts():
-#     """show the calf workouts that are offered"""
-#     workout = make_api_request('7')
-#     workouts = workout['results']
-#     comment = Comments.query.all()
-#     form = CommentForm()
-#     return render_template("muscles/workout.html", workouts = workouts, form = form, comment = comment)
-
-# @app.route('/calves', methods = ["POST"])
-# def add_calf_comment():
-#     """Show the comment form"""
-#     add_comment()
-#     return redirect(request.url)
-
-# @app.route('/hamstrings')
-# def hamstring_workouts():
-#     """show the hamstring workouts that are offered"""
-#     workout = make_api_request('11')
-#     workouts = workout['results']
-#     comment = Comments.query.all()
-#     form = CommentForm()
-#     return render_template("muscles/workout.html", workouts = workouts, form = form, comment = comment)
-
-# @app.route('/hamstrings', methods = ["POST"])
-# def add_hamstring_comment():
-#     """Show the comment form"""
-#     add_comment()
-#     return redirect(request.url)
-
-# @app.route('/glutes')
-# def glute_workouts():
-#     """show the glute workouts that are offered"""
-#     workout = make_api_request('8')
-#     workouts = workout['results']
-#     comment = Comments.query.all()
-#     form = CommentForm()
-#     return render_template("muscles/workout.html", workouts = workouts, form = form, comment = comment)
-
-# @app.route('/glutes', methods = ["POST"])
-# def add_glute_comment():
-#     """Show the comment form"""
+#     muscle_group = muscle_groups[muscle_name]
 #     add_comment()
 #     return redirect(request.url)
 
