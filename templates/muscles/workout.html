@@ -66,22 +66,12 @@
                     </div>
                     <div class="backup-form" id="edit">{{ form.content(placeholder = "Content", class = "section")
                         }}</div>
-                    <div class="backup-form" id="edit">{{ form.name(placeholder = "Name (optional)", class =
-                        "section") }}</div>
+                    <div class="backup-form" id="edit">{{ form.name(placeholder = "Name (optional)", class = "section")
+                        }}</div>
                     <div>{{ form.workout_id (value = workout.uuid) }}</div>
-                    <!-- {{ form.hidden_tag() }}
-
-                        {% for field in form if field.widget.input_type != 'hidden' %}
-                        {% for error in field.errors %}
-                        <span class="text-danger">{{ error }}</span>
-                        {% endfor %}
-                        {{ field(placeholder=field.label.text, class="form-control") }}
-                        {% endfor %} -->
-
                     <button id="submit-button"
                         class="{{ workout.uuid }} btn btn-primary btn-block btn-lg">Submit</button>
                     {% endautoescape %}
-
                 </form>
             </div>
     </div>
