@@ -1,15 +1,12 @@
 {% extends 'base.html' %}
-{% block title %}Chest{% endblock %}
+{% block title %}{{ muscle_group.muscle }}{% endblock %}
 
 {% block content %}
 
 <div class="iblock">
-    {% for muscle, all_items in muscle_groups.items() %}
-    {% if muscle_groups.muscle in url_for(request.endpoint) %}
-    <div id="bground-photo" style="background-image: url({{ all_items.image1 }}), url({{ all_items.image2 }});">
+    <div id="bground-photo"
+        style="background-image: url({{ muscle_group.muscle_image }}), url({{ muscle_group.body_image }});">
     </div>
-    {% endif %}
-    {% endfor %}
 </div>
 <ul class="workout-list">
     {% for workout in workouts %}

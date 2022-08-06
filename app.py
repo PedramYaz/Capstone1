@@ -1,20 +1,20 @@
 from multiprocessing.sharedctypes import Value
 import os
 import requests
-from flask import Flask, redirect, render_template, flash, jsonify, session, request, g
+from flask import Flask, redirect, render_template, flash, session, request
 from flask_debugtoolbar import DebugToolbarExtension
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.exceptions import Unauthorized
 from models import db, connect_db, User, Goals, Comments
-from forms import LoginForm, RegisterForm, CommentForm, DeleteCommentForm, GoalsForm, EditGoalsForm
+from forms import LoginForm, RegisterForm, CommentForm, GoalsForm, EditGoalsForm
 from passes import Authorization, SECRET_KEY
 
 app = Flask(__name__)
-# app.config['SQLALCHEMY_DATABASE_URI'] = (
-#     os.environ.get('DATABASE_URL', 'postgresql:///exercise'))
-prodURI = os.getenv('DATABASE_URL')
-prodURI = prodURI.replace("postgres://", "postgresql://")
-app.config['SQLALCHEMY_DATABASE_URI'] = prodURI
+app.config['SQLALCHEMY_DATABASE_URI'] = (
+    os.environ.get('DATABASE_URL', 'postgresql:///exercise'))
+# prodURI = os.getenv('DATABASE_URL')
+# prodURI = prodURI.replace("postgres://", "postgresql://")
+# app.config['SQLALCHEMY_DATABASE_URI'] = prodURI
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = True
 app.config["SECRET_KEY"] = os.environ.get('SECRET_KEY', SECRET_KEY)
@@ -30,25 +30,87 @@ db = SQLAlchemy(app)
 debug = DebugToolbarExtension(app)
 
 
-muscle_groups = {"chest": {'image': "https://thumbs.dreamstime.com/b/d-rendered-muscle-illustration-pectoralis-major-pectoralis-major-157612533.jpg", 'id': '4', "image1": "/static/images/muscles/main/muscle-4.svg", "image2": "/static/images/muscles/muscular_system_front.svg"},
+muscle_groups = { "chest":
+                    {
+                        "muscle": "Chest",
+                        'image': "https://thumbs.dreamstime.com/b/d-rendered-muscle-illustration-pectoralis-major-pectoralis-major-157612533.jpg",
+                        'id': '4',
+                        "muscle_image": "/static/images/muscles/main/muscle-4.svg",
+                        "body_image": "/static/images/muscles/muscular_system_front.svg"
+                    },
                 "biceps":
-                {"image": "https://thumbs.dreamstime.com/b/d-rendered-muscle-illustration-biceps-biceps-157612447.jpg", "id": "1", "image1": "/static/images/muscles/main/muscle-1.svg", "image2": "/static/images/muscles/muscular_system_front.svg"},
-                "abs": {"image": "https://thumbs.dreamstime.com/b/d-rendered-muscle-illustration-external-oblique-external-oblique-157612399.jpg", "id": "14", "image1": "/static/images/muscles/main/muscle-14.svg", "image2": "/static/images/muscles/muscular_system_front.svg"},
-                "shoulders": {"image": "https://thumbs.dreamstime.com/b/deltoid-d-rendered-muscle-illustration-157612398.jpg", "id": "2", "image1": "/static/images/muscles/main/muscle-2.svg", "image2": "/static/images/muscles/muscular_system_front.svg"},
-                "quads": {"image": "https://thumbs.dreamstime.com/b/d-rendered-muscle-illustration-vastus-lateralis-vastus-lateralis-157612633.jpg", "id": "10", "image1": "/static/images/muscles/main/muscle-10.svg", "image2": "/static/images/muscles/muscular_system_front.svg"},
-                "traps": {"image": "https://thumbs.dreamstime.com/b/d-rendered-muscle-illustration-trapezius-trapezius-157612310.jpg", "id": "9", "image1": "/static/images/muscles/main/muscle-9.svg", "image2": "/static/images/muscles/muscular_system_back.svg"},
-                "back": {"image": "https://thumbs.dreamstime.com/b/d-rendered-muscle-illustration-latissimus-dorsi-latissimus-dorsi-157612158.jpg", "id": "12", "image1": "/static/images/muscles/main/muscle-12.svg", "image2": "/static/images/muscles/muscular_system_back.svg"},
-                "triceps": {"image": "https://thumbs.dreamstime.com/b/triceps-d-rendered-muscle-illustration-157612423.jpg", "id": "5", "image1": "/static/images/muscles/main/muscle-5.svg", "image2": "/static/images/muscles/muscular_system_back.svg"},
-                "calves": {"image": "https://thumbs.dreamstime.com/b/gastrocnemius-d-rendered-muscle-illustration-157612044.jpg", "id": "7", "image1": "/static/images/muscles/main/muscle-7.svg", "image2": "/static/images/muscles/muscular_system_back.svg"},
-                "hamstrings": {"image": "https://thumbs.dreamstime.com/b/biceps-femoris-longus-d-rendered-muscle-illustration-157611954.jpg", "id": "11", "image1": "/static/images/muscles/main/muscle-11.svg", "image2": "/static/images/muscles/muscular_system_back.svg"},
-                "glutes": {"image": "https://thumbs.dreamstime.com/b/d-rendered-muscle-illustration-gluteus-maximus-gluteus-maximus-157612061.jpg", "id": "8", "image1": "/static/images/muscles/main/muscle-8.svg", "image2": "/static/images/muscles/muscular_system_back.svg"}}
+                    {
+                        "muscle": "Biceps",
+                        "image": "https://thumbs.dreamstime.com/b/d-rendered-muscle-illustration-biceps-biceps-157612447.jpg", "id": "1",
+                        "muscle_image": "/static/images/muscles/main/muscle-1.svg", 
+                        "body_image": "/static/images/muscles/muscular_system_front.svg"},
+                "abs":
+                    {
+                        "muscle": "Abs",
+                        "image": "https://thumbs.dreamstime.com/b/d-rendered-muscle-illustration-external-oblique-external-oblique-157612399.jpg",
+                        "id": "14",
+                        "muscle_image": "/static/images/muscles/main/muscle-14.svg",
+                        "body_image": "/static/images/muscles/muscular_system_front.svg"},
+                "shoulders":
+                    {
+                        "muscle": "Shoulders",
+                        "image": "https://thumbs.dreamstime.com/b/deltoid-d-rendered-muscle-illustration-157612398.jpg",
+                        "id": "2",
+                        "muscle_image": "/static/images/muscles/main/muscle-2.svg",
+                        "body_image": "/static/images/muscles/muscular_system_front.svg"},
+                "quads":
+                    {
+                        "muscle": "Quads",
+                        "image": "https://thumbs.dreamstime.com/b/d-rendered-muscle-illustration-vastus-lateralis-vastus-lateralis-157612633.jpg",
+                        "id": "10",
+                        "muscle_image": "/static/images/muscles/main/muscle-10.svg", "body_image":
+                        "/static/images/muscles/muscular_system_front.svg"},
+                "traps":
+                    {
+                        "muscle": "Traps",
+                        "image": "https://thumbs.dreamstime.com/b/d-rendered-muscle-illustration-trapezius-trapezius-157612310.jpg",
+                        "id": "9",
+                        "muscle_image": "/static/images/muscles/main/muscle-9.svg",
+                        "body_image": "/static/images/muscles/muscular_system_back.svg"},
+                "back":
+                    {
+                        "muscle": "Back",
+                        "image": "https://thumbs.dreamstime.com/b/d-rendered-muscle-illustration-latissimus-dorsi-latissimus-dorsi-157612158.jpg",
+                        "id": "12",
+                        "muscle_image": "/static/images/muscles/main/muscle-12.svg",
+                        "body_image": "/static/images/muscles/muscular_system_back.svg"},
+                "triceps":
+                    {
+                        "muscle": "Triceps",
+                        "image": "https://thumbs.dreamstime.com/b/triceps-d-rendered-muscle-illustration-157612423.jpg",
+                        "id": "5",
+                        "muscle_image": "/static/images/muscles/main/muscle-5.svg",
+                        "body_image": "/static/images/muscles/muscular_system_back.svg"},
+                "calves": 
+                    {
+                        "muscle": "Calves",
+                        "image": "https://thumbs.dreamstime.com/b/gastrocnemius-d-rendered-muscle-illustration-157612044.jpg", "id": "7",
+                        "muscle_image": "/static/images/muscles/main/muscle-7.svg",
+                        "body_image": "/static/images/muscles/muscular_system_back.svg"},
+                "hamstrings":
+                    {
+                        "muscle": "Hamstrings",
+                        "image": "https://thumbs.dreamstime.com/b/biceps-femoris-longus-d-rendered-muscle-illustration-157611954.jpg",
+                        "id": "11",
+                        "muscle_image": "/static/images/muscles/main/muscle-11.svg",
+                        "body_image": "/static/images/muscles/muscular_system_back.svg"},
+                "glutes": 
+                    {
+                        "muscle": "Glutes",
+                        "image": "https://thumbs.dreamstime.com/b/d-rendered-muscle-illustration-gluteus-maximus-gluteus-maximus-157612061.jpg",
+                        "id": "8",
+                        "muscle_image": "/static/images/muscles/main/muscle-8.svg",
+                        "body_image": "/static/images/muscles/muscular_system_back.svg"}}
 
 
 @app.route('/')
 def homepage():
     '''showcase the route to the homepage, where you have the option of logging in/registering or just choosing your muscle group to find workouts in'''
-
-    
     return render_template('home.html')
 
 
@@ -230,12 +292,13 @@ def add_comment():
 def specific_workouts(muscle_name):
     """Show the workouts that are offered for the muscle selected"""
 
+    muscle_group = muscle_groups[muscle_name]
     muscle_id = muscle_groups[muscle_name].get('id')
     workout = make_api_request(muscle_id)
     workouts = workout['results']
     comment = Comments.query.all()
     form = CommentForm()
-    return render_template("muscles/workout.html", workouts = workouts, form = form, comment = comment, muscle_groups = muscle_groups)
+    return render_template("muscles/workout.html", workouts = workouts, form = form, comment = comment, muscle_group = muscle_group)
 
 
 # @app.route('/muscle/<muscle_name>', methods = ["POST"])
