@@ -25,7 +25,7 @@ class CommentForm(FlaskForm):
     name = StringField("Name (optional)")
     title = StringField("Title", validators = [InputRequired()])
     content = TextAreaField("Content", validators = [InputRequired()])
-    date_posted = DateField("Date", validators = [InputRequired()])
+    date_posted = DateField("Date")
     workout_id = HiddenField("Workout ID", validators = [InputRequired()])
 
 class GoalsForm(FlaskForm):

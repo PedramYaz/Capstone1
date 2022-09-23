@@ -61,7 +61,7 @@
                 </div>
                 <br>
                 <form method="POST" id="comment" class="comment">
-
+                    {{ form.csrf_token }}
                     <div class="backup-form" id="edit">{{ form.title(placeholder = "Title", class = "section") }}
                     </div>
                     <div class="backup-form" id="edit">{{ form.content(placeholder = "Content", class = "section")

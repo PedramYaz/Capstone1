@@ -11,7 +11,7 @@ from passes import Authorization, SECRET_KEY
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = (
-    os.environ.get('DATABASE_URL', 'postgresql:///exercise'))
+    os.environ.get('DATABASE_URL', 'postgresql:///exercise2'))
 # prodURI = os.getenv('DATABASE_URL')
 # prodURI = prodURI.replace("postgres://", "postgresql://")
 # app.config['SQLALCHEMY_DATABASE_URI'] = prodURI
@@ -63,8 +63,8 @@ muscle_groups = { "chest":
                         "muscle": "Quads",
                         "image": "https://thumbs.dreamstime.com/b/d-rendered-muscle-illustration-vastus-lateralis-vastus-lateralis-157612633.jpg",
                         "id": "10",
-                        "muscle_image": "/static/images/muscles/main/muscle-10.svg", "body_image":
-                        "/static/images/muscles/muscular_system_front.svg"},
+                        "muscle_image": "/static/images/muscles/main/muscle-10.svg",
+                        "body_image": "/static/images/muscles/muscular_system_front.svg"},
                 "traps":
                     {
                         "muscle": "Traps",
@@ -134,8 +134,17 @@ def register_user():
         birthday = form.birthday.data
 
         new_user = User.register(username, password, first_name, last_name, birthday)
+        # print(username)
+        # print(password)
+        # print(first_name)
+        # print(last_name)
+        # print(birthday)
+        # print(new_user)
+        # print(form.errors)
 
         db.session.add(new_user)
+        # current_db_sessions = db.session.object_session(new_user)
+        # current_db_sessions.add(new_user)
         db.session.commit()
         session["username"] = new_user.username
         return redirect(f"/user/{new_user.username}")
@@ -292,29 +301,31 @@ def make_api_request(muscle_id):
 def specific_workouts(muscle_name):
     """Show the workouts that are offered for the muscle selected"""
 
-    muscle_group = muscle_groups[muscle_name]
-    muscle_id = muscle_groups[muscle_name].get('id')
-    workout = make_api_request(muscle_id)
-    workouts = workout['results']
-    comment = Comments.query.all()
-    
     form = CommentForm()
 
-    if form.validate_on_submit():
-        name = form.name.data
-        title = form.title.data
-        content = form.content.data
-        date_posted = form.date_posted.data
-        workout_id = form.workout_id.data
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            name = form.name.data
+            title = form.title.data
+            content = form.content.data
+            date_posted = form.date_posted.data
+            workout_id = form.workout_id.data
 
-        comment = Comments(name = name, title = title, content = content, date_posted = date_posted, workout_id = workout_id)
+            comment = Comments(name = name, title = title, content = content, date_posted = date_posted, workout_id = workout_id)
 
-        db.session.add(comment)
-        db.session.commit()
+            db.session.add(comment)
+            db.session.commit()
 
-        return redirect(request.url)
+            return redirect(request.url)
+    else: 
+        muscle_group = muscle_groups[muscle_name]
+        muscle_id = muscle_groups[muscle_name].get('id')
+        workout = make_api_request(muscle_id)
+        workouts = workout['results']
+        comment = Comments.query.all()
+        
 
-    return render_template("muscles/workout.html", workouts = workouts, form = form, comment = comment, muscle_group = muscle_group)
+        return render_template("muscles/workout.html", workouts = workouts, form = form, comment = comment, muscle_group = muscle_group)
 
 
 # @app.route('/muscle/<muscle_name>', methods = ["POST"])
